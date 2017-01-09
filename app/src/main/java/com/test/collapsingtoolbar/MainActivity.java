@@ -37,13 +37,13 @@ public class MainActivity extends FragmentActivity {
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 if (appBarLayout.getTotalScrollRange() - Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {
                     //Expanded
-                    Log.d(TAG, "Expanded");
+                    Log.d(TAG, "AppBarLayout Expanded state");
                     for (CollapseListener collapseListener : mCollapseListeners) {
                         collapseListener.onExpanded();
                     }
                 } else {
                     //  Collapsed
-                    Log.d(TAG, "Collapsed");
+                    Log.d(TAG, "AppBarLayout Collapsed");
                     for (CollapseListener collapseListener : mCollapseListeners) {
                         collapseListener.onCollapsed();
                     }
