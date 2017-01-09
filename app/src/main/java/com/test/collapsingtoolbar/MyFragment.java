@@ -16,13 +16,15 @@
 
 package com.test.collapsingtoolbar;
 
-import android.os.Build;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -30,22 +32,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MyFragment extends Fragment {
+public class MyFragment extends Fragment implements CollapseListener {
+
+    private static final String TAG = MyFragment.class.getSimpleName();
+    private ListView lv;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ListView lv = (ListView) inflater.inflate(R.layout.fragment, container, false);
+        final View view = inflater.inflate(R.layout.fragment, container, false);
+        lv = (ListView) view.findViewById(R.id.listview);
         List<String> values = getRandomSublist(new String[]{"Hello"}, 30);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, values);
         lv.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, values));
         lv.setAdapter(adapter);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            lv.setNestedScrollingEnabled(false);
-        }
         return lv;
     }
 
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof MainActivity) {
+            MainActivity mainActivity = (MainActivity) context;
+            mainActivity.addCollapseListener(this);
+        }
+
+    }
 
     /**
      * dummy items for recycler view
@@ -59,4 +73,13 @@ public class MyFragment extends Fragment {
         return list;
     }
 
+    @Override
+    public void onCollapsed() {
+        lv.setNestedScrollingEnabled(true);
+    }
+
+    @Override
+    public void onExpanded() {
+        lv.setNestedScrollingEnabled(false);
+    }
 }
