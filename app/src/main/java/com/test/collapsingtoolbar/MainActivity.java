@@ -28,7 +28,6 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.green, R.color.red, R.color.yellow);
-        mSwipeRefreshLayout.requestDisallowInterceptTouchEvent(true);
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         if (viewPager != null) {
             setupViewPager(viewPager);
