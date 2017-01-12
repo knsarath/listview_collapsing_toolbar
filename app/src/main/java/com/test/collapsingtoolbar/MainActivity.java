@@ -1,18 +1,21 @@
 package com.test.collapsingtoolbar;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = "MainActivity";
     public List<CollapseListener> mCollapseListeners = new ArrayList<>();
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public void addCollapseListener(CollapseListener collapseListener) {
         mCollapseListeners.add(collapseListener);
@@ -22,7 +25,10 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.green, R.color.red, R.color.yellow);
+        mSwipeRefreshLayout.requestDisallowInterceptTouchEvent(true);
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         if (viewPager != null) {
             setupViewPager(viewPager);
@@ -64,4 +70,13 @@ public class MainActivity extends FragmentActivity {
     }
 
 
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }, 3000);
+    }
 }

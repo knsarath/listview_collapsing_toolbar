@@ -21,6 +21,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,16 +33,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MyFragment extends Fragment implements CollapseListener {
+public class MyFragment extends Fragment implements CollapseListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = MyFragment.class.getSimpleName();
     private ListView lv;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment, container, false);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.swipe_refresh_layout);
         lv = (ListView) view.findViewById(R.id.listview);
         List<String> values = getRandomSublist(new String[]{"Hello"}, 30);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, values);
@@ -76,13 +80,22 @@ public class MyFragment extends Fragment implements CollapseListener {
     public void onCollapsed() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             lv.setNestedScrollingEnabled(true);
+            mSwipeRefreshLayout.setEnabled(false);
         }
     }
 
     @Override
     public void onExpanded() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (lv.isNestedScrollingEnabled()) {
+                mSwipeRefreshLayout.setEnabled(true);
+            }
             lv.setNestedScrollingEnabled(false);
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        Log.d(TAG, "Refresh");
     }
 }
