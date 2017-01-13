@@ -1,21 +1,17 @@
 package com.test.collapsingtoolbar;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends FragmentActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends FragmentActivity {
     private static final String TAG = "MainActivity";
     public List<CollapseListener> mCollapseListeners = new ArrayList<>();
-    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public void addCollapseListener(CollapseListener collapseListener) {
         mCollapseListeners.add(collapseListener);
@@ -25,9 +21,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.green, R.color.red, R.color.yellow);
+
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         if (viewPager != null) {
             setupViewPager(viewPager);
@@ -42,13 +36,14 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 if (appBarLayout.getTotalScrollRange() - Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {
                     //Expanded
-                    Log.d(TAG, "AppBarLayout Expanded state");
+                  //  Log.d(TAG, "AppBarLayout Expanded state");
                     for (CollapseListener collapseListener : mCollapseListeners) {
                         collapseListener.onExpanded();
                     }
+
                 } else {
                     //  Collapsed
-                    Log.d(TAG, "AppBarLayout Collapsed");
+                  //  Log.d(TAG, "AppBarLayout Collapsed");
                     for (CollapseListener collapseListener : mCollapseListeners) {
                         collapseListener.onCollapsed();
                     }
@@ -69,13 +64,5 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
     }
 
 
-    @Override
-    public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        }, 3000);
-    }
+
 }

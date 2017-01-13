@@ -19,10 +19,10 @@ package com.test.collapsingtoolbar;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,13 +44,23 @@ public class MyFragment extends Fragment implements CollapseListener, SwipeRefre
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment, container, false);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.green, R.color.red, R.color.yellow);
+
         lv = (ListView) view.findViewById(R.id.listview);
         List<String> values = getRandomSublist(new String[]{"Hello"}, 30);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, values);
         lv.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, values));
         lv.setAdapter(adapter);
-        return lv;
+
+
+     /*   RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.listview);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(new SimpleStringRecyclerViewAdapter(getContext(), getRandomSublist(new String[]{"hello"}, 30)));
+*/
+
+        return view;
     }
 
 
@@ -96,6 +106,11 @@ public class MyFragment extends Fragment implements CollapseListener, SwipeRefre
 
     @Override
     public void onRefresh() {
-        Log.d(TAG, "Refresh");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }, 3000);
     }
 }
