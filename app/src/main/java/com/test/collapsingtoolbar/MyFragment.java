@@ -16,7 +16,6 @@
 
 package com.test.collapsingtoolbar;
 
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -59,13 +58,23 @@ public class MyFragment extends Fragment implements CollapseListener, SwipeRefre
 
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof MainActivity) {
-            MainActivity mainActivity = (MainActivity) context;
+    public void onResume() {
+        super.onResume();
+        if (getActivity() != null && getActivity() instanceof MainActivity) {
+            MainActivity mainActivity = (MainActivity) getActivity();
             mainActivity.addCollapseListener(this);
+            Log.d(TAG, "Added listener");
         }
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (getActivity() != null && getActivity() instanceof MainActivity) {
+            MainActivity mainActivity = (MainActivity) getActivity();
+            mainActivity.removeCollapseListener(this);
+            Log.d(TAG, "Removed listener");
+        }
     }
 
     /**
@@ -109,23 +118,5 @@ public class MyFragment extends Fragment implements CollapseListener, SwipeRefre
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (getActivity() != null && getActivity() instanceof MainActivity) {
-            MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.addCollapseListener(this);
-            Log.d(TAG, "Added listener");
-        }
-    }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (getActivity() != null && getActivity() instanceof MainActivity) {
-            MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.removeCollapseListener(this);
-            Log.d(TAG, "Removed listener");
-        }
-    }
 }
