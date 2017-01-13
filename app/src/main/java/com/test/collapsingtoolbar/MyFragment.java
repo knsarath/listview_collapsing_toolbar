@@ -23,6 +23,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,13 +54,6 @@ public class MyFragment extends Fragment implements CollapseListener, SwipeRefre
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, values);
         lv.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, values));
         lv.setAdapter(adapter);
-
-
-     /*   RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.listview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new SimpleStringRecyclerViewAdapter(getContext(), getRandomSublist(new String[]{"hello"}, 30)));
-*/
-
         return view;
     }
 
@@ -112,5 +106,26 @@ public class MyFragment extends Fragment implements CollapseListener, SwipeRefre
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         }, 3000);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() != null && getActivity() instanceof MainActivity) {
+            MainActivity mainActivity = (MainActivity) getActivity();
+            mainActivity.addCollapseListener(this);
+            Log.d(TAG, "Added listener");
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (getActivity() != null && getActivity() instanceof MainActivity) {
+            MainActivity mainActivity = (MainActivity) getActivity();
+            mainActivity.removeCollapseListener(this);
+            Log.d(TAG, "Removed listener");
+        }
     }
 }

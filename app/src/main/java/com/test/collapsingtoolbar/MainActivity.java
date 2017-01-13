@@ -17,6 +17,12 @@ public class MainActivity extends FragmentActivity {
         mCollapseListeners.add(collapseListener);
     }
 
+    public void removeCollapseListener(CollapseListener collapseListener) {
+        if (mCollapseListeners.contains(collapseListener)) {
+            mCollapseListeners.remove(collapseListener);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,14 +42,14 @@ public class MainActivity extends FragmentActivity {
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 if (appBarLayout.getTotalScrollRange() - Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {
                     //Expanded
-                  //  Log.d(TAG, "AppBarLayout Expanded state");
+                    //  Log.d(TAG, "AppBarLayout Expanded state");
                     for (CollapseListener collapseListener : mCollapseListeners) {
                         collapseListener.onExpanded();
                     }
 
                 } else {
                     //  Collapsed
-                  //  Log.d(TAG, "AppBarLayout Collapsed");
+                    //  Log.d(TAG, "AppBarLayout Collapsed");
                     for (CollapseListener collapseListener : mCollapseListeners) {
                         collapseListener.onCollapsed();
                     }
@@ -62,7 +68,6 @@ public class MainActivity extends FragmentActivity {
         viewPager.setAdapter(viewPagerAdapter);
         viewPager.setOffscreenPageLimit(3);
     }
-
 
 
 }
