@@ -14,11 +14,13 @@ public class MainActivity extends FragmentActivity {
     public List<CollapseListener> mCollapseListeners = new ArrayList<>();
 
     public void addCollapseListener(CollapseListener collapseListener) {
-        mCollapseListeners.add(collapseListener);
+        if (mCollapseListeners != null && collapseListener != null) {
+            mCollapseListeners.add(collapseListener);
+        }
     }
 
     public void removeCollapseListener(CollapseListener collapseListener) {
-        if (mCollapseListeners.contains(collapseListener)) {
+        if (mCollapseListeners != null && mCollapseListeners.contains(collapseListener)) {
             mCollapseListeners.remove(collapseListener);
         }
     }
